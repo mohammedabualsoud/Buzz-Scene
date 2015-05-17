@@ -1,0 +1,94 @@
+Buzz_Scene (Building and shops Recognision ) 
+==================
+Abstract :
+Buzz-Scene is intended to make our life easier by creating a new
+interface that allow the users to query services by taken an image for
+a specific buildings/shops from the street , instead of annoying the
+users with the traditional way of querying services across the
+browsers from the websites , and all that in the street environment .
+Buzz scene are based on study done by myself in Nablus city Rafyidya
+street on 24 point of interest (buildings/shops) concluded that devices
+has the ability to recognize and see like humans .
+
+Built using OpenCV 2.4.9
+
+Implementing BOVW method: Visual Categorization with Bags of Keypoints by Mohammed Abulsoud , 
+Using SIFT detector  and descriptor .
+Radial Basis Function SVMs for classification.
+
+This is basically a primer to BOVW methods using OpenCV, which are dead simple.
+
+
+Requirement
+-----------
+-cmake.
+-opencv lib +2 (tested under 2.4.9).
+
+Compiling
+---------
+Basically, it's very simple just run:
+1)cmake .. ; if you build out the source code .else if within the source code just run cmake . 
+2)make 
+ 
+then all target excutables are generated ,you can work with theses collections . 
+
+Working it
+----------
+Assume the whole directorys are organized same as the project here . 
+I cannot upload the data-set for privacy  .
+
+The Exctuables
+---------------
+1)extract_features : this will extract the descriptors from <training_directory> and store them to <destination_directory> as a yaml file .
+NOTE: the training images used in this stage are 984 images for building the vocabulary ,you can skip this excutable if you want to build 
+the vocabulary instead by using the build_dictinary excutables .
+
+USAGE:: ./extract_features <training_directory> <destination_directory>
+
+
+2)build_dictinary : this will produce a container of unclustered descriptors , then cluster them using kmeans++ .
+USAGE:: ./build_dictinary  <Training directory>  <destination dictinary directory>  <size of the dicinary> 
+
+this process are very long it take me 4 hours on my laptop i3 4 core with number of trial equal 3 and size of the dictinary = 1000.
+I store the dictinary/vocabulary for performace testing with different size of dictinarys . 
+
+3) compute_histogram_responses : given a set of examples in <examples file> (here train.txt) , the histogram of each example are computed ,
+and stored on disk in <response directory> .
+I store the responses  for performace testing  with different SVM paramters  . 
+
+USAGE: ./compute_histogram_responses <vocabulary_file.yml> <examples file> <response directory> 
+
+4) train_svms : the train strategy used is one vs rest approach (1 vs 24 ) .
+give the <train examples file.yaml> the SVM's parameters file produced are stored on disk in SVM_parameter_files directory .
+USAGE:: ./train_svms <train examples file.yaml>
+
+5) predict_one_class : this will test the module for one class ,given the <dictinary file>(dictinary) and the <test examples file> (test.txt).
+
+
+USAGE:: ./predict_one_class <dictinary file> <test examples file> 
+
+6) test_allclasses : test the module with <test samples file>(test.txt) examples & <SVM paramters directory> (parameters directory) ,will end up with Confusion matrix , you can visualize it by running conf.py program .
+
+USAGE:: ./test_allclasses <test samples file> <SVM parameters directory> 
+
+7) building_recognition : given unseen image , the module will the class with the heighest score .
+you can tweak the flags to use another scoring strategy ,and multiple building recognition in the same scene , the last is not implement yet .
+
+USAGE:: ./building_recognition <input_image>  
+
+
+
+
+Notes
+-----
+Some of the computation is speed up on multi-core machines by using OpenMP, so it's recommended to use it.
+
+
+Results
+-------
+Precsion = 84.5716%
+Recall = 83.2947%
+
+you can see the result in the confusion_mat.txt file ,also there's an Image to visualise the result . 
+this is Un-balanced data-set .
+

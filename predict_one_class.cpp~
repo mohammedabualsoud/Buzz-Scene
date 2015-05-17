@@ -1,0 +1,136 @@
+#include "predict_one_class.h"
+
+
+void predict_one_class_main(){
+
+    //load some class_1 samples into matrix
+    //load the associated SVM parameter file into SVM
+    //test (predict)
+   // Mat test_samples;
+    CvSVM classifier1,classifier2;
+    Mat vocabulary;
+	FileStorage fs("dictionary/dictionary-1000.yaml", FileStorage::READ);
+    if (!fs.isOpened() ){
+
+        cout << " cannot open" << "dicitnary file" << endl ;
+        return  ;
+    }
+	fs["vocabulary"] >> vocabulary;
+	fs.release();
+
+	Ptr<FeatureDetector> detector = FeatureDetector::create("SIFT");
+    Ptr<DescriptorExtractor> extractor = DescriptorExtractor::create("SIFT");
+	Ptr<DescriptorMatcher > matcher(new  BruteForceMatcher<L2<float> >());
+	BOWImgDescriptorExtractor bowide(extractor,matcher);
+	bowide.setVocabulary(vocabulary);
+
+	cout << "BOW has Vocabulary Size = " << vocabulary.rows << endl ;
+
+    //svm_1000_auto
+    //svm_1000_c10e10_opt
+    //classifier.load("SVM_parameter_files/svm_1000_auto/SVM_classifier_class_1.yaml") ;
+    classifier1.load("SVM_parameter_files/svm_1000_c10e10_opt/SVM_classifier_class_1.yaml") ;
+    classifier2.load("SVM_parameter_files/svm_1000_auto/SVM_classifier_class_1.yaml") ;
+    fstream fstr ("test.txt");
+    vector<string>files;
+    if ( !fstr.is_open() ){
+        cerr << "cannot opent test.txt " << endl;
+        return ;
+    }
+    vector <string >lines ;
+    int k=0;
+    string line ;
+    while ( getline (fstr,line) && k < 48 ){
+
+    lines.push_back(line);
+    k++;
+}
+    fstr.close();
+    //extract the filepath and class from test.txt
+string filepath;
+string tmp;
+string class_;
+for ( size_t i = 0 ; i < lines.size() ; i++ ){
+
+    stringstream ss(lines[i] );
+    ss >> tmp;
+    filepath = tmp ;
+    filepath += " ";
+    ss >>tmp ;
+    filepath += tmp ;
+    ss >> class_ ;
+    class_ = "class_" + class_ ;
+//    classes_count[class_]++;
+    files.push_back(filepath) ;
+  //  classes.push_back(class_);
+
+}   for ( size_t i = 0 ; i  < files.size() ; i++ ){
+    Mat img = imread(files[i] , 0 ) ;
+    vector<KeyPoint> keypoints;
+    detector->detect(img, keypoints);
+    Mat imgDescriptor;
+    //resopnse to the vocabulary
+    bowide.compute(img, keypoints, imgDescriptor);
+    string predicted_label ;
+    //svm_1000_c10e10_opt
+    {
+    float res = classifier1.predict(imgDescriptor);
+    float distance = classifier1.predict(imgDescriptor,true);
+
+    predicted_label = (res == 1 ? "Class 1 " : "NOT CLASS 1 ");
+    std::cout << "- Result of prediction svm_1000_c10e10_opt : (" << predicted_label << "): " << "Label = " <<res <<"Distance: " << distance << std::endl;
+    }
+    //svm_1000_auto
+    {
+    float res = classifier2.predict(imgDescriptor);
+    float distance = classifier2.predict(imgDescriptor,true);
+
+     predicted_label = (res == 1 ? "Class 1 " : "NOT CLASS 1 ");
+    std::cout << "- Result of prediction svm_1000_auto : (" << predicted_label << "): " << "Label = " << res <<"Distance: " << distance << std::endl;
+    }
+    cv::imshow(predicted_label, img);
+    cv::waitKey(-1);
+
+    cv::destroyWindow(predicted_label);
+
+}
+//    test_samples = imread("2015-04-17 17.46.39.jpg",CV_LOAD_IMAGE_GRAYSCALE);
+//    vector<KeyPoint> keypoints;
+//    detector->detect(test_samples, keypoints);
+//    Mat imgDescriptor;
+//    //resopnse to the vocabulary
+//    bowide.compute(test_samples, keypoints, imgDescriptor);
+//    cout<< imgDescriptor.rows << endl ;
+//
+//    cout <<imgDescriptor.cols << endl;
+
+
+//    fs["class_12"] >> test_sampels
+//    for ( int i = 0 ; i < test_samples.rows ; i++ ){
+//        float res = classifier.predict (test_samples.row(i) ) ;
+//        if (res == 1 )pos++ ;
+//        else neg++ ;
+//        }
+//        cout << "POS = " << pos << " ,  NEG = " << neg << endl ;
+
+        //float res = classifier.predict(test_samples.row(i),false  ) ;
+//    string class_= "class_";
+//    for ( size_t i = 1 ; i <= 24; i++ ){
+//        stringstream ss ;
+//        ss << class_ <<i ;
+//        fs[ss.str()] >>test_samples;
+//        size_t positive  =  0 ;
+//        size_t negative = 0 ;
+//        //test svm classifier that classify class_1 as positive and others as negative
+//        for ( int i = 0 ; i < test_samples.rows ; i++ ){
+//            float res = classifier.predict(test_samples.row(i),false  ) ;
+//           ( (res == 1) ? (positive++):(negative++) );
+//
+//        }
+//
+//        cout << ss.str() << " positive examples  = " <<positive <<" , negative examples =" << negative  << endl ;
+//
+//    }
+//    fs.release();
+
+}

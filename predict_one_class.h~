@@ -1,0 +1,16 @@
+#ifndef PREDICT_ONE_CLASS_H_INCLUDED
+#define PREDICT_ONE_CLASS_H_INCLUDED
+
+#include <opencv2/opencv.hpp>
+#include "opencv2/ml/ml.hpp"
+#include "opencv2/core/core.hpp"
+#include "opencv2/legacy/legacy.hpp"
+#include <fstream>
+#include <iostream>
+#include <string>
+#include <vector>
+using namespace std;
+using namespace cv ;
+
+void predict_one_class_main();
+#endif // PREDICT_ONE_CLASS_H_INCLUDED

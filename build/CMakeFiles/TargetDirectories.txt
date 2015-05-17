@@ -1,0 +1,7 @@
+/home/abu-gasiem/CB-Wrokspace/Buzz_Scene (copy)/build/CMakeFiles/build_dictinary.dir
+/home/abu-gasiem/CB-Wrokspace/Buzz_Scene (copy)/build/CMakeFiles/building_recognition.dir
+/home/abu-gasiem/CB-Wrokspace/Buzz_Scene (copy)/build/CMakeFiles/compute_histogram_responses.dir
+/home/abu-gasiem/CB-Wrokspace/Buzz_Scene (copy)/build/CMakeFiles/extract_features.dir
+/home/abu-gasiem/CB-Wrokspace/Buzz_Scene (copy)/build/CMakeFiles/predict_one_class.dir
+/home/abu-gasiem/CB-Wrokspace/Buzz_Scene (copy)/build/CMakeFiles/test_allclasses.dir
+/home/abu-gasiem/CB-Wrokspace/Buzz_Scene (copy)/build/CMakeFiles/train_svms.dir

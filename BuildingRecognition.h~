@@ -1,0 +1,61 @@
+#ifndef BUILDINGRECOGNITION_H
+#define BUILDINGRECOGNITION_H
+
+#include <iostream>
+#include <string>
+#include <map>
+#include <vector>
+#include <fstream>
+#include <sstream>
+#include <ctime>
+#include "opencv2/highgui/highgui.hpp"
+#include "opencv2/features2d/features2d.hpp"
+#include "opencv2/nonfree/nonfree.hpp"
+#include <opencv2/opencv.hpp>
+#include "opencv2/ml/ml.hpp"
+#include "opencv2/core/core.hpp"
+#include "opencv2/legacy/legacy.hpp"
+
+using namespace std ;
+using namespace cv ;
+
+ //Requiremnets objecs
+    //detecotr for keypoints (sift)
+    //descriptor for features(sift)
+    //vocabulary (dicitnary)
+    //matcher of features
+    //BOWdescriptorextractor
+    //classifiers
+    //vecotr of scores
+    //the input image
+class BuildingRecognition
+{
+    public:
+        BuildingRecognition () ;
+        BuildingRecognition(Mat& input_img , vector<string>& output_classes ,bool with_multiple_class = false,bool debug = false );
+        void categorize_image(Mat& input_img , vector<string>& output_classes ) ;
+        void categorize_image(Mat& input_img , map<string,vector<float> >& output_classes ) ;
+        ~BuildingRecognition();
+        void setWithMultiple_class();
+        void setDebug();
+
+    private:
+
+	void initSVMs();
+	void initVocabulary();
+
+
+
+	Ptr<FeatureDetector > detector;
+	Ptr<BOWImgDescriptorExtractor > bowide;
+	Ptr<DescriptorMatcher > matcher;
+	Ptr<DescriptorExtractor > extractor;
+	map<string,CvSVM> classes_classifiers;
+	Mat input_img;
+	Mat vocabulary;
+	bool with_multiple_class;
+	bool debug;
+
+};
+
+#endif // BUILDINGRECOGNITION_H
