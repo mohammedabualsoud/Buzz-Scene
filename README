@@ -16,13 +16,14 @@ Implementing BOVW method: Visual Categorization with Bags of Keypoints by Mohamm
 Using SIFT detector  and descriptor .
 Radial Basis Function SVMs for classification.
 
-This is basically a primer to BOVW methods using OpenCV, which are dead simple.
-
+This is basically a primer to BOVW methods using OpenCV.
+Feel free to reuse the code .
 
 Requirement
 -----------
 -cmake.
 -opencv lib +2 (tested under 2.4.9).
+-c++ compiler support c++11 features .
 
 Compiling
 ---------
@@ -34,7 +35,7 @@ then all target excutables are generated ,you can work with theses collections .
 
 Working it
 ----------
-Assume the whole directorys are organized same as the project here . 
+Assume the whole directorys are organized same stated below in the (directories header ). 
 I cannot upload the data-set for privacy  .
 
 The directories 
@@ -101,5 +102,5 @@ Precsion = 84.5716%
 Recall = 83.2947%
 
 you can see the result in the confusion_mat.txt file ,also there's an Image to visualise the result . 
-this is Un-balanced data-set .
+this is Un-balanced data-set for Building & shops in my city Nablus .
 
